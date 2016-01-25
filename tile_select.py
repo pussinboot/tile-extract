@@ -1,4 +1,4 @@
-from skimage import data
+from skimage import data, io
 from skimage.viewer import ImageViewer
 from skimage.viewer.plugins import PlotPlugin
 from skimage.viewer.canvastools import RectangleTool
@@ -22,11 +22,13 @@ class TileViewer(ImageViewer):
 		self.raise_()
 
 def blit(dest, src, loc):
+	#print('dest',dest.shape)
 	pos = [i if i >= 0 else None for i in loc]
 	neg = [-i if i < 0 else None for i in loc]
 	target = dest[[slice(i,None) for i in pos]]
-	src = src[[slice(i, j) for i,j in zip(neg, target.shape)]]
-	target[[slice(None, i) for i in src.shape]] = src
+	#print('tgt',target.shape)
+	src = src[[slice(i, j) for i,j in zip(neg, target.shape[:2])]]
+	target[[slice(None, i) for i in src.shape[:2]]] = src
 	return dest
 
 def copy_tile(source_img,extents):
@@ -43,7 +45,7 @@ def copy_tile(source_img,extents):
 
 class TilePreview(PlotPlugin):
 	def __init__(self,**kwargs):
-		super(TilePreview,self).__init__(height=400, width=400,**kwargs)
+		super(TilePreview,self).__init__(height=500, width=500,**kwargs)
 		
 	def attach(self,image_viewer):
 		super(TilePreview,self).attach(image_viewer)
@@ -55,11 +57,12 @@ class TilePreview(PlotPlugin):
 
 	def update(self,extents):
 		#print(extents)
-		new_img = copy_tile(self.image_viewer.image,extents)
+		new_img = copy_tile(self.image_viewer.original_image,extents)
 		self.ax.imshow(new_img)
 		self.redraw()
 if __name__ == '__main__':
 	image = data.camera()
+	#image = io.imread('./test1.jpg')
 	viewer = TileViewer(image,x=50,y=50)
 	tp = TilePreview()
 	viewer += tp
