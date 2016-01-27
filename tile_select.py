@@ -61,8 +61,8 @@ class TilePreview(PlotPlugin):
 		self.ax.imshow(new_img)
 		self.redraw()
 if __name__ == '__main__':
-	image = data.camera()
-	#image = io.imread('./test1.jpg')
+	#image = data.camera()
+	image = io.imread('./test2.jpg')
 	viewer = TileViewer(image,x=50,y=50)
 	tp = TilePreview()
 	viewer += tp
