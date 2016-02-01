@@ -29,3 +29,5 @@ for i in range(12,91):
 	io.imsave('./frames/out/3/' +  str(i-11) + '.png',crop)
 
 # ffmpeg -i %d.png -vcodec qtrle fg.mov
+
+# need 2 integrate w/ the gui i did to make everything possible w/ one script
